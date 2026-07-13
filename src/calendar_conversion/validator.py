@@ -81,8 +81,24 @@ def validate_event(
 def validate_events(events: Iterable[Event]) -> list[ValidationIssue]:
     """Return all issues, annotated with each event's one-based position."""
     issues: list[ValidationIssue] = []
+    first_index_by_id: dict[str, int] = {}
     for event_index, event in enumerate(events, start=1):
         issues.extend(validate_event(event, event_index=event_index))
+        if event.id.strip():
+            if event.id in first_index_by_id:
+                issues.append(
+                    ValidationIssue(
+                        field="id",
+                        message=(
+                            "id must be unique; first used by event "
+                            f"{first_index_by_id[event.id]}"
+                        ),
+                        event_id=event.id,
+                        event_index=event_index,
+                    )
+                )
+            else:
+                first_index_by_id[event.id] = event_index
     return issues
 
 

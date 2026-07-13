@@ -131,3 +131,28 @@ therefore retains the originating event ID; a missing ID is displayed as
 `<empty>`. Keeping output separate means validation can also be reused by
 graphical interfaces, tests, and other consumers without unwanted terminal
 side effects.
+
+Because iCalendar uses `UID` to identify events, batch validation also rejects
+duplicate non-empty event IDs. The issue identifies the later event and the
+one-based position where the ID first appeared.
+
+## ICS generator
+
+The ICS generator creates one `VCALENDAR` containing one `VEVENT` component
+for every valid event. This is the standard iCalendar mechanism for collecting
+events in one importable file; a ZIP archive is not used because calendar
+applications can import the `.ics` file directly.
+
+The model's event ID becomes the iCalendar `UID`, and a UTC `DTSTAMP` is added
+to every event. Timed events are converted from their stored timezone to UTC,
+which preserves the correct instant across Europe/Rome daylight-saving changes
+without requiring consumers to interpret a custom timezone definition.
+All-day events use date values, and their inclusive model `end_date` is moved
+forward by one day because iCalendar defines `DTEND` as exclusive.
+
+Text values are escaped according to iCalendar rules, content lines are folded
+at the 75-octet limit without splitting UTF-8 characters, and output uses CRLF
+line endings. `generate_ics` returns calendar text, while `write_ics` writes the
+same output to a filesystem path or an open text stream. Generation stops with
+an `ICSGenerationError` containing the validation issues if any event is
+invalid.

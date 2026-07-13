@@ -10,6 +10,8 @@
 
 I'll use Python as programming language. 
 
+🟢 **Status: implemented**
+
 ## Internal Event Model
 
 Let's start by defining the event model. Write the first definition of a **class** containing the following attributes of the event:
@@ -101,3 +103,21 @@ Temporal validation rejects reversed dates and, for same-day timed events,
 reversed times. Invalid-event descriptions can be printed in bold red as
 `Invalid event [id=event-id]: description` using `print_validation_errors`,
 so every reported problem can be traced to its originating event.
+
+## ICS Generator
+
+Now implement the code for the generator. I let you the freedom of all implementation. The only design choice is that the generator allows to collect all the events in one box (such as a compressed .zip file?), if you agree that this would be a good thing.
+
+🟢 **Status: implemented**
+
+Implemented in `src/calendar_conversion/ics_generator.py`, with automated
+tests. A single `.ics` file already acts as a standard container for multiple
+events, so no ZIP archive is necessary. Avoiding ZIP makes the generated file
+directly importable into Apple Calendar, Google Calendar, and other calendar
+applications.
+
+The generator validates every event before writing, creates one `VEVENT` per
+event inside one `VCALENDAR`, converts timed events from their `Europe/Rome`
+timezone to UTC, and converts inclusive all-day end dates to the exclusive
+`DTEND` required by iCalendar. It also escapes text, folds long content lines,
+and writes the CRLF line endings required by the format.

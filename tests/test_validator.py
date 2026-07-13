@@ -85,6 +85,13 @@ class ValidatorTests(unittest.TestCase):
         self.assertEqual(len(issues), 2)
         self.assertEqual([issue.event_index for issue in issues], [2, 2])
 
+    def test_validate_events_rejects_duplicate_non_empty_ids(self) -> None:
+        issues = validate_events([timed_event(), timed_event()])
+
+        self.assertEqual(len(issues), 1)
+        self.assertEqual(issues[0].event_index, 2)
+        self.assertIn("first used by event 1", issues[0].message)
+
     def test_prints_each_invalid_event_message_in_bold_red(self) -> None:
         issues = validate_event(timed_event(id="", summary=""))
         output = StringIO()
