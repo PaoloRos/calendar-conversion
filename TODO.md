@@ -4,6 +4,7 @@
 
 - If something is unclear, aks me for clarification!
 - Whenever you have some suggestions, tell them to me!
+- When implemented my instructions, mark them in green and bold as "Status: implemented".
 
 ## Programming language
 
@@ -24,9 +25,9 @@ Let's start by defining the event model. Write the first definition of a **class
 
 If you think that there's more, tell it to me.
 
-**Status:** Implemented in `src/calendar_conversion/event.py`, with automated
-tests. Timezone and all-day-event support are proposed as future additions and
-need an explicit policy before implementation.
+🟢 **Status: implemented**
+
+Implemented in `src/calendar_conversion/event.py`, with automated tests.
 
 Add to the class the support for the timezone and all-day-event:
 
@@ -42,7 +43,9 @@ else
 
 For a one-day all-day event, `end_date` is equal to `start_date`.
 
-**Status:** Implemented. Both event types use `start_date` and `end_date`.
+🟢 **Status: implemented**
+
+Both event types use `start_date` and `end_date`.
 `all_day` determines whether the time fields must be omitted or supplied.
 Timed events use `Europe/Rome` through Python's timezone-aware `zoneinfo`
 support. The Python model uses lowercase `snake_case` attributes; readers and
@@ -64,8 +67,10 @@ Annotations:
 
 I would suggest to create a new source file for the reader, but if you think differently, let me that know!
 
-**Status:** Implemented in `src/calendar_conversion/csv_reader.py`, with
-automated tests. The reader accepts CSV paths and text streams, uses ISO
+🟢 **Status: implemented**
+
+Implemented in `src/calendar_conversion/csv_reader.py`, with automated tests.
+The reader accepts CSV paths and text streams, uses ISO
 `YYYY-MM-DD` dates and 24-hour `HH:MM` or `HH:MM:SS` times, and reports input
 errors with their source row number. `location` and `description` columns are
 optional and default to empty strings.
@@ -75,3 +80,24 @@ because it is immediately understandable. The reader also accepts `yes`/`no`,
 `y`/`n`, and `1`/`0`, case-insensitively, to make hand-written and
 spreadsheet-exported input convenient without treating ambiguous values as
 booleans.
+
+## Validator
+
+Now implement the validator code. It's required to check:
+
+- whether the temporal order is correct (ie: it shouldn't be possible that the start_date is after the end_date)
+- whether the `ID` and `SUMMARY` field are empty (or maybe it's better to implement this feature already in the reader? Tell me what do you think!)
+
+I reckon that the Validator is a part of the Event code, so I suggest to implement it in the same file, but if you think differently, tell it to me!
+
+🟢 **Status: implemented**
+
+The validator is implemented in its own `validator.py` module because semantic
+validation is a separate responsibility from storing an immutable event. It
+collects all problems instead of stopping at the first one. Empty or
+whitespace-only `id` and `summary` values are checked here rather than in the
+reader, so every future input format receives the same validation behavior.
+Temporal validation rejects reversed dates and, for same-day timed events,
+reversed times. Invalid-event descriptions can be printed in bold red as
+`Invalid event [id=event-id]: description` using `print_validation_errors`,
+so every reported problem can be traced to its originating event.

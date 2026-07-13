@@ -113,3 +113,21 @@ Dates use the unambiguous ISO `YYYY-MM-DD` representation. Times use 24-hour
 `HH:MM` or `HH:MM:SS`. The canonical boolean spelling is `true` or `false`,
 while `yes`/`no`, `y`/`n`, and `1`/`0` are accepted case-insensitively for
 convenience. Unknown values cause an explicit, row-numbered input error.
+
+## Validator
+
+Semantic validation lives in a separate `validator` module rather than in the
+event model or an input reader. This keeps validation consistent for CSV and
+future XLSX inputs and allows all issues in an event collection to be reported
+together. The validator rejects empty or whitespace-only identifiers and
+summaries, reversed date ranges, and reversed times for same-day timed events.
+Batch validation annotates each issue with the event's one-based input
+position.
+
+Validation and terminal presentation remain separate operations. Callers use
+`print_validation_errors` to display every returned issue as a bold red
+`Invalid event [id=event-id]: description` message. Each `ValidationIssue`
+therefore retains the originating event ID; a missing ID is displayed as
+`<empty>`. Keeping output separate means validation can also be reused by
+graphical interfaces, tests, and other consumers without unwanted terminal
+side effects.
