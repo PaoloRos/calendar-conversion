@@ -47,3 +47,31 @@ For a one-day all-day event, `end_date` is equal to `start_date`.
 Timed events use `Europe/Rome` through Python's timezone-aware `zoneinfo`
 support. The Python model uses lowercase `snake_case` attributes; readers and
 generators will map external uppercase names at the format boundary.
+
+## CSV Reader
+
+Now implement the CSV reader. According to the event model, the file in this format will be as follows:
+
+```
+id,summary,all_date,start_date,start_time,end_date,end_time,location,description
+...
+```
+
+Annotations:
+
+- location and description can be missing, since they're are set by default as empty strings
+- the `all_date` field is a boolean variable: therefore, it could be 0/1, true/false, yes/no, etc... Consider that events will be programmed by humans, so tell me which is the best choice/choices about these boolean values.
+
+I would suggest to create a new source file for the reader, but if you think differently, let me that know!
+
+**Status:** Implemented in `src/calendar_conversion/csv_reader.py`, with
+automated tests. The reader accepts CSV paths and text streams, uses ISO
+`YYYY-MM-DD` dates and 24-hour `HH:MM` or `HH:MM:SS` times, and reports input
+errors with their source row number. `location` and `description` columns are
+optional and default to empty strings.
+
+For human-entered booleans, `true`/`false` is the recommended canonical form
+because it is immediately understandable. The reader also accepts `yes`/`no`,
+`y`/`n`, and `1`/`0`, case-insensitively, to make hand-written and
+spreadsheet-exported input convenient without treating ambiguous values as
+booleans.

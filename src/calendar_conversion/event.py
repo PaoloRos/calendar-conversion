@@ -18,13 +18,13 @@ class Event:
 
     id: str
     summary: str
+    all_day: bool = False
     start_date: date | None = None
     start_time: time | None = None
     end_date: date | None = None
     end_time: time | None = None
     location: str = ""
     description: str = ""
-    all_day: bool = False
     timezone: ZoneInfo = field(default=ROME_TIMEZONE)
 
     def __post_init__(self) -> None:

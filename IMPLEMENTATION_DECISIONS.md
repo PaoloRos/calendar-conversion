@@ -101,3 +101,15 @@ The model enforces only its structural invariant: an event must provide all
 fields belonging to exactly one of the two shapes. Business rules such as
 required non-empty text, unique IDs, and an end after the start will be
 implemented in the validator, as defined by the architecture.
+
+## CSV reader
+
+The normalized CSV reader lives in its own `csv_reader` module and accepts
+either a filesystem path or an open text stream. The fields `location` and
+`description` are optional; all other columns in the normalized CSV format are
+required. The external `all_date` column maps to the model's `all_day` field.
+
+Dates use the unambiguous ISO `YYYY-MM-DD` representation. Times use 24-hour
+`HH:MM` or `HH:MM:SS`. The canonical boolean spelling is `true` or `false`,
+while `yes`/`no`, `y`/`n`, and `1`/`0` are accepted case-insensitively for
+convenience. Unknown values cause an explicit, row-numbered input error.
