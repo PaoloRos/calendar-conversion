@@ -8,7 +8,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
 project = "Calendar Conversion Application"
-author = "calendar-conversion contributors"
+author = "PaoloRos"
 release = "0.1.0"
 
 extensions = [

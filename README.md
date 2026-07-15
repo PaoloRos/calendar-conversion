@@ -4,7 +4,7 @@ Convert a human-authored XLSX or CSV schedule into one standard iCalendar
 (`.ics`) file. The application validates each event, converts the valid ones,
 skips invalid entries, and prints a conversion report.
 
-See the [full documentation](docs/index.rst) for input rules, architecture, API
+See the [full documentation](docs/_build/html/index.html) for input rules, architecture, API
 details, testing, and the AI-assisted development workflow.
 
 ## Why this project exists
@@ -79,3 +79,7 @@ Open `docs/_build/html/index.html` after building the documentation.
 automated tests. The project owner supplied the requirements and decisions in
 `TODO.md`, recorded the agreed choices in `IMPLEMENTATION_DECISIONS.md`, and
 verified the program's behavior.
+
+## Author
+
+Developed by [Paolo Rossi](https://github.com/PaoloRos).

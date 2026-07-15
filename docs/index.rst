@@ -36,3 +36,8 @@ From the project root, with the virtual environment active:
 
 The resulting ``schedule.ics`` can be imported directly by common calendar
 applications.
+
+Author
+------
+
+Developed by `Paolo Rossi <https://github.com/PaoloRos>`_.
