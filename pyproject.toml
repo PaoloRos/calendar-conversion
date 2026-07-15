@@ -7,6 +7,9 @@ name = "calendar-conversion"
 version = "0.1.0"
 description = "Convert normalized schedules into iCalendar files."
 requires-python = ">=3.11"
+dependencies = [
+    "openpyxl>=3.1,<4",
+]
 
 [tool.setuptools.packages.find]
 where = ["src"]

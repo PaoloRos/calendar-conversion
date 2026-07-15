@@ -121,3 +121,22 @@ event inside one `VCALENDAR`, converts timed events from their `Europe/Rome`
 timezone to UTC, and converts inclusive all-day end dates to the exclusive
 `DTEND` required by iCalendar. It also escapes text, folds long content lines,
 and writes the CRLF line endings required by the format.
+
+## XLSX Reader
+
+Implement the reader for .xlsx. Since a .csv reader is already implemented and since the .xlsx files are written by humans in an affordable file (ie: id, summary,...[different rows]), I would suggest to build the code to covert a .xlsx into a .csv, and then the CSV Reader could be called. Is it good idea, in terms of reliability and performance?
+
+🟢 **Status: implemented**
+
+Implemented in `src/calendar_conversion/xlsx_reader.py`, with automated tests.
+The reader uses the active worksheet by default or a named worksheet when
+requested. It accepts the same columns and values as the CSV reader, while
+also understanding native Excel dates, times, and booleans. Completely empty
+data rows are ignored, and errors identify their worksheet and original row.
+
+The proposed conversion is reliable and fast for human-sized schedules when
+performed in memory: the XLSX reader normalizes spreadsheet values to CSV text
+and delegates parsing to the existing CSV reader, so both formats share the
+same input rules without creating a temporary file. `openpyxl` is used for
+XLSX decoding because the Python standard library does not implement that
+file format.

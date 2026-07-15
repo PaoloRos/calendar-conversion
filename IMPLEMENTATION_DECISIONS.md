@@ -6,7 +6,11 @@ This document records the agreed implementation architecture for the calendar-co
 
 ## Architecture
 
-The application accepts schedules in **XLSX** or **CSV** format. Each input reader converts its source into a shared **internal event model**. The events are then validated and passed to the **ICS** generator.
+The application accepts schedules in **XLSX** or **CSV** format. The CSV
+reader owns the common conversion into the shared **internal event model**.
+The XLSX reader decodes workbook cells, normalizes them into CSV-compatible
+rows in memory, and delegates those rows to the CSV reader. The events are
+then validated and passed to the **ICS** generator.
 
 The CSV format can be used directly as an input format or exported as an intermediate representation for inspection.
 
@@ -14,15 +18,15 @@ The CSV format can be used directly as an input format or exported as an interme
 
 1. **XLSX reader**
    - Reads schedules that follow the project's workbook template.
-   - Converts spreadsheet rows into the internal event model.
+   - Normalizes spreadsheet cells and delegates the rows to the CSV reader.
 
 2. **CSV reader**
-   - Reads normalized calendar data from a CSV file.
-   - Converts CSV rows into the internal event model.
+   - Reads normalized calendar data from a CSV file or the XLSX adapter.
+   - Converts normalized rows into the internal event model.
 
 3. **Internal event model**
    - Provides one common representation independent of the input format.
-   - Connects the input readers, validator, and ICS generator.
+   - Connects normalized input, the validator, and the ICS generator.
 
 4. **Validator**
    - Validates the normalized events before calendar generation.
@@ -49,8 +53,9 @@ The CSV format can be used directly as an input format or exported as an interme
 flowchart LR
     XLSX["XLSX schedule"] --> XR["XLSX reader"]
     CSV["CSV schedule"] --> CR["CSV reader"]
-    XR --> MODEL["Internal event model"]
-    CR --> MODEL
+    XR --> NORMALIZED["Normalized CSV rows<br/>(in memory)"]
+    NORMALIZED --> CR
+    CR --> MODEL["Internal event model"]
     MODEL --> VALIDATOR["Validator"]
     VALIDATOR -->|"Valid events"| ICSGEN["ICS generator"]
     VALIDATOR -->|"Invalid events"| ERRORS["Validation report"]
@@ -59,9 +64,32 @@ flowchart LR
 
 ## Programming language
 
-The project uses **Python 3.11 or newer**. The initial implementation relies
-only on the standard library; third-party dependencies will be added when a
-component requires them.
+The project uses **Python 3.11 or newer**. Runtime dependencies, including
+`openpyxl` for XLSX support, are declared in `pyproject.toml`.
+
+A project-local virtual environment is recommended so these dependencies do
+not affect the system Python installation or other projects. Create and set it
+up from the project root with:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -e .
+```
+
+The editable installation (`-e`) makes source-code changes immediately
+available without reinstalling the package. Verify the active environment and
+the XLSX dependency with:
+
+```bash
+python --version
+python -c "import openpyxl; print(openpyxl.__version__)"
+```
+
+The Python version must be at least 3.11, while `openpyxl` must satisfy the
+version range declared in `pyproject.toml`. Run `deactivate` when finished.
+The `.venv/` directory is local development state and is excluded from Git.
 
 ## Internal event model
 
@@ -113,6 +141,25 @@ Dates use the unambiguous ISO `YYYY-MM-DD` representation. Times use 24-hour
 `HH:MM` or `HH:MM:SS`. The canonical boolean spelling is `true` or `false`,
 while `yes`/`no`, `y`/`n`, and `1`/`0` are accepted case-insensitively for
 convenience. Unknown values cause an explicit, row-numbered input error.
+
+## XLSX reader
+
+The XLSX reader lives in its own `xlsx_reader` module and uses `openpyxl`, the
+project's first third-party runtime dependency, to decode workbooks. It reads
+the active worksheet by default and also accepts an explicit worksheet name.
+The workbook is opened in read-only, data-only mode so large inputs do not
+need to be loaded fully into memory and saved formula results are read rather
+than formula expressions.
+
+Worksheet rows are normalized into CSV text in memory and then parsed by the
+existing CSV reader. This makes XLSX and CSV use exactly the same required
+columns, boolean spellings, date/time formats, optional fields, and structural
+checks. Excel-native date, time, datetime, and boolean cell values are
+converted to those normalized spellings before delegation. Completely empty
+data rows are skipped, with a row mapping retained so an input error still
+reports its original worksheet and row number. No temporary CSV file is
+created; its extra memory and processing cost is negligible for the intended
+human-authored schedules.
 
 ## Validator
 

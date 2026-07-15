@@ -9,6 +9,7 @@ from .validator import (
     validate_event,
     validate_events,
 )
+from .xlsx_reader import XLSXReadError, read_events_xlsx
 
 __all__ = [
     "CSVReadError",
@@ -16,9 +17,11 @@ __all__ = [
     "ICSGenerationError",
     "ROME_TIMEZONE",
     "ValidationIssue",
+    "XLSXReadError",
     "generate_ics",
     "print_validation_errors",
     "read_events_csv",
+    "read_events_xlsx",
     "validate_event",
     "validate_events",
     "write_ics",

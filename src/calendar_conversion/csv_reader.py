@@ -31,6 +31,7 @@ class CSVReadError(ValueError):
     """An error in the structure or contents of an events CSV file."""
 
     def __init__(self, message: str, *, row_number: int | None = None) -> None:
+        self.message = message
         self.row_number = row_number
         prefix = f"row {row_number}: " if row_number is not None else ""
         super().__init__(prefix + message)

@@ -1,0 +1,6 @@
+Metadata-Version: 2.4
+Name: calendar-conversion
+Version: 0.1.0
+Summary: Convert normalized schedules into iCalendar files.
+Requires-Python: >=3.11
+Requires-Dist: openpyxl<4,>=3.1

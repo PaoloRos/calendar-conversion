@@ -3,3 +3,4 @@ impl_workflow.pdf
 __pycache__/
 *.py[cod]
 local_demo/
+.venv/
