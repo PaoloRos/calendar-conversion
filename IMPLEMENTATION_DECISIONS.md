@@ -37,7 +37,7 @@ The CSV format can be used directly as an input format or exported as an interme
 
 6. **Application interface**
    - Selects the appropriate reader from the input file type.
-   - Coordinates reading, validation, and output generation.
+   - Coordinates reading, validation, partial conversion, and reporting.
 
 ## Implementation sequence
 
@@ -203,3 +203,58 @@ line endings. `generate_ics` returns calendar text, while `write_ics` writes the
 same output to a filesystem path or an open text stream. Generation stops with
 an `ICSGenerationError` containing the validation issues if any event is
 invalid.
+
+## Application interface
+
+The root-level `main.py` is a thin executable wrapper around the reusable
+`calendar_conversion.application` module. With no arguments it reads
+`events.xlsx` and writes `schedule.ics`; a positional argument selects another
+`.xlsx` or `.csv` input, and `--output`/`-o` selects another ICS destination.
+Keeping the coordination logic in the package makes it directly testable while
+retaining the requested `python main.py` user interface.
+
+The application validates the complete event collection, writes only events
+without validation issues, and reports valid and invalid event counts. Each
+invalid event is listed once with its ID and summary even when it has multiple
+validation issues. A complete conversion exits with status 0, a partial
+conversion with status 1, and a fatal read or write failure with status 2.
+
+Report colors depend on the output stream. Interactive terminal output uses
+bold cyan for the heading and bold red for the invalid count and event list.
+When standard output is redirected, for example with `>> report.txt`, the
+stream is not a terminal and the same report is written without ANSI escape
+sequences, producing a clean text file.
+
+### Running the application
+
+Run the application from the project root with the virtual environment
+activated:
+
+```bash
+source .venv/bin/activate
+python main.py
+```
+
+With no arguments, `events.xlsx` is read from the project root and the result
+is written to `schedule.ics`. A different XLSX or CSV input and a different ICS
+output can be selected with:
+
+```bash
+python main.py another_name.xlsx
+python main.py another_name.csv
+python main.py another_name.xlsx --output another_schedule.ics
+```
+
+The conversion report is printed to standard output. Redirect it with `>` to
+replace a report file or `>>` to append to one; redirected reports contain no
+ANSI color codes:
+
+```bash
+python main.py another_name.xlsx > report.txt
+python main.py another_name.xlsx >> report.txt
+```
+
+Use `python main.py --help` to display all command-line options and
+`deactivate` to leave the virtual environment when finished. Exit status 0
+means every event was converted, status 1 means invalid events were skipped,
+and status 2 means a fatal input or output error prevented conversion.

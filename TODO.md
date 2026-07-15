@@ -140,3 +140,36 @@ and delegates parsing to the existing CSV reader, so both formats share the
 same input rules without creating a temporary file. `openpyxl` is used for
 XLSX decoding because the Python standard library does not implement that
 file format.
+
+## Entry point file
+
+Implement the features to controll the entire programm. The following are required:
+
+- an entry point script `main.py` that takes as input the file containing the events and converts it into a `.ics` file. It's to print a colored report on the command line, but has to allow also to display the report on a .txt file if the user want so (ie: the user write on the command line `main.py ... >> report.txt`). The report must contain the number of valide (and converted) events and the number of invalid (and not converted) events, this last in red and bold; in particular, the invalid events must be listed using the `ID` and the `Summary`. When the report is printed in a `.txt`, manage the formatting
+- the input file must have the name `events.xlsx` by default, but the user can specify another proper one (`.xlsx` or `.csv`)
+- while the output file must have the name `schedule.ics` by default
+
+I would suggest to put the `main.py`, events files and the eventual report in the main root of the directory, since it would be easy for a user (a programmer) to identify what's to be used.
+
+The user must call the Application by typing the following commands in the terminal, considering the `.venv` activated:
+
+```{bash}
+python main.py
+python main.py another_name.xlsx/.csv
+python main.py [...] >> report_name.txt
+```
+
+🟢 **Status: implemented**
+
+Implemented with a root-level `main.py` and reusable application logic in
+`src/calendar_conversion/application.py`, with automated tests. The default
+input is `events.xlsx`, the default output is `schedule.ics`, and CSV/XLSX
+inputs are selected automatically from their extension. A custom output can
+be selected with `--output another_schedule.ics`.
+
+The application converts valid events and skips invalid ones. Its report lists
+each invalid event once using its ID and summary. Invalid counts and entries
+are bold red when output is an interactive terminal; ANSI formatting is
+automatically omitted when standard output is redirected to a text file.
+Successful complete conversions exit with status 0, partial conversions with
+invalid events exit with status 1, and fatal input/output errors with status 2.
