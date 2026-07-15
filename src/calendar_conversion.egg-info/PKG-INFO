@@ -4,3 +4,5 @@ Version: 0.1.0
 Summary: Convert normalized schedules into iCalendar files.
 Requires-Python: >=3.11
 Requires-Dist: openpyxl<4,>=3.1
+Provides-Extra: docs
+Requires-Dist: Sphinx<9,>=8.1; extra == "docs"

@@ -1,0 +1,26 @@
+:root {
+  --accent: #176b87;
+  --soft: #eef7fa;
+}
+
+div.body h1,
+div.body h2,
+div.body h3 {
+  color: var(--accent);
+}
+
+div.body {
+  max-width: 860px;
+}
+
+div.highlight {
+  border-left: 4px solid var(--accent);
+}
+
+img[alt*="architecture" i] {
+  background: var(--soft);
+  border-radius: 10px;
+  box-sizing: border-box;
+  padding: 1rem;
+  width: 100%;
+}

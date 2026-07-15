@@ -1,0 +1,25 @@
+"""Sphinx configuration for calendar-conversion."""
+
+from pathlib import Path
+import sys
+
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(PROJECT_ROOT / "src"))
+
+project = "Calendar Conversion Application"
+author = "calendar-conversion contributors"
+release = "0.1.0"
+
+extensions = [
+    "sphinx.ext.autodoc",
+    "sphinx.ext.napoleon",
+]
+autodoc_typehints = "description"
+autodoc_member_order = "bysource"
+
+exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
+html_theme = "alabaster"
+html_static_path = ["_static"]
+html_css_files = ["custom.css"]
+html_title = "Calendar Conversion Application documentation"

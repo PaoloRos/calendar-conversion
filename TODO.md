@@ -173,3 +173,38 @@ are bold red when output is an interactive terminal; ANSI formatting is
 automatically omitted when standard output is redirected to a text file.
 Successful complete conversions exit with status 0, partial conversions with
 invalid events exit with status 1, and fatal input/output errors with status 2.
+
+## Documentation
+
+Add the Sphinx documentation about the code details of the project, and all that is required for this kind of docs. Don't be afraid to use images to explain the architecture. Be concise and easy in the writing. The output format should be a HTML file.
+
+In the documentation specify the usage of AI Tools: in particular the model used (Openai codex GPT 5.6 Sol). But instructions and decision were given by me, sometimes with the help of your suggestions. The results were verified by me, not always deeply, but at least the correct functioning of each part of the program. The followed paradigma of AI usage was:
+
+1. A brainstorming about the project to evaluate how to create the application
+
+2. Instructions were provided by me through a todo file
+
+3. A implementation decisions file contains the took decisions regarding the implementation
+
+Autometed tests, such as unit test, were written by you, while visual tests were also performed to check the correct functioning.
+
+🟢 **Status: implemented**
+
+The Sphinx source is in `docs/` and builds a concise HTML site containing the
+installation and usage instructions, input format, architecture, code API,
+testing guidance, and the requested disclosure of the AI-assisted workflow.
+The architecture page includes a vector diagram that remains clear at any
+browser zoom level.
+
+Sphinx is a documentation-only dependency and is available through the
+project's `docs` optional dependency. With the virtual environment activated,
+install it and build the HTML documentation with:
+
+```bash
+python -m pip install -e '.[docs]'
+python -m sphinx -b html docs docs/_build/html
+```
+
+Open `docs/_build/html/index.html` after the build. The generated files are
+excluded from Git because they can always be reproduced from the Sphinx
+source.

@@ -5,3 +5,4 @@ __pycache__/
 local_demo/
 .venv/
 ~$*.xlsx
+docs/_build/

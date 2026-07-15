@@ -11,5 +11,10 @@ dependencies = [
     "openpyxl>=3.1,<4",
 ]
 
+[project.optional-dependencies]
+docs = [
+    "Sphinx>=8.1,<9",
+]
+
 [tool.setuptools.packages.find]
 where = ["src"]

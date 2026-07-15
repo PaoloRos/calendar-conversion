@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="420" viewBox="0 0 960 420" role="img" aria-labelledby="title desc">
+  <title id="title">Calendar Conversion Application architecture</title>
+  <desc id="desc">CSV and XLSX inputs are read into an event model, validated, then written as an ICS calendar with a conversion report.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="16" markerHeight="12" refX="0" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L0,12 L16,6 z" fill="#176b87"/>
+    </marker>
+    <style>
+      .box { fill: #ffffff; stroke: #176b87; stroke-width: 2; rx: 12; }
+      .output { fill: #e8f5ec; stroke: #27824b; }
+      .report { fill: #fff4e5; stroke: #b66a00; }
+      .label { font: 600 17px system-ui, sans-serif; fill: #18323c; text-anchor: middle; }
+      .note { font: 14px system-ui, sans-serif; fill: #42616d; text-anchor: middle; }
+      .line { fill: none; stroke: #176b87; stroke-width: 3; marker-end: url(#arrow); }
+    </style>
+  </defs>
+  <rect width="960" height="420" rx="16" fill="#eef7fa"/>
+  <rect class="box" x="30" y="65" width="145" height="75"/>
+  <text class="label" x="102" y="98">XLSX schedule</text>
+  <text class="note" x="102" y="121">human-authored</text>
+  <rect class="box" x="30" y="275" width="145" height="75"/>
+  <text class="label" x="102" y="308">CSV schedule</text>
+  <text class="note" x="102" y="331">normalized rows</text>
+  <rect class="box" x="235" y="65" width="145" height="75"/>
+  <text class="label" x="307" y="98">XLSX reader</text>
+  <text class="note" x="307" y="121">in-memory adapter</text>
+  <rect class="box" x="235" y="275" width="145" height="75"/>
+  <text class="label" x="307" y="308">CSV reader</text>
+  <text class="note" x="307" y="331">shared parser</text>
+  <rect class="box" x="440" y="170" width="145" height="80"/>
+  <text class="label" x="512" y="204">Event model</text>
+  <text class="note" x="512" y="228">immutable data</text>
+  <rect class="box" x="645" y="170" width="145" height="80"/>
+  <text class="label" x="717" y="204">Validator</text>
+  <text class="note" x="717" y="228">semantic rules</text>
+  <rect class="box output" x="815" y="65" width="120" height="75"/>
+  <text class="label" x="875" y="98">ICS file</text>
+  <text class="note" x="875" y="121">valid events</text>
+  <rect class="box report" x="815" y="275" width="120" height="75"/>
+  <text class="label" x="875" y="308">Report</text>
+  <text class="note" x="875" y="331">invalid events</text>
+  <path class="line" d="M175 102 H219"/>
+  <path class="line" d="M307 140 V259"/>
+  <path class="line" d="M175 312 H219"/>
+  <path class="line" d="M380 312 C410 312 410 210 424 210"/>
+  <path class="line" d="M585 210 H629"/>
+  <path class="line" d="M790 195 C810 195 795 102 799 102"/>
+  <path class="line" d="M790 225 C810 225 795 312 799 312"/>
+</svg>
