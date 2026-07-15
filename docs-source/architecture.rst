@@ -1,7 +1,7 @@
-Architecture
-============
+Application architecture
+========================
 
-The application keeps file decoding, event representation, validation,
+The application separates file decoding, event representation, validation,
 generation, and command-line coordination separate. Both input formats reach
 the same CSV parsing contract, so their behavior remains consistent.
 

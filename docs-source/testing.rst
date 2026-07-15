@@ -1,7 +1,7 @@
-Testing
-=======
+Testing the application
+=======================
 
-Automated unit tests cover the event model, both readers, validation, ICS
+Automated unit tests cover the event model, both input readers, validation, ICS
 generation, and command-line coordination. Run the complete suite from the
 project root:
 

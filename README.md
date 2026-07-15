@@ -4,8 +4,9 @@ Convert a human-authored XLSX or CSV schedule into one standard iCalendar
 (`.ics`) file. The application validates each event, converts the valid ones,
 skips invalid entries, and prints a conversion report.
 
-See the [full documentation](docs/_build/html/index.html) for input rules, architecture, API
-details, testing, and the AI-assisted development workflow.
+See the [full documentation](https://paoloros.github.io/calendar-conversion/)
+for input rules, architecture, API details, testing, and the AI-assisted
+development workflow.
 
 ## Why this project exists
 
@@ -57,7 +58,7 @@ and `2` means a fatal read or write error.
 
 ## Architecture
 
-![Conversion workflow](docs/_static/architecture-v4.svg)
+![Conversion workflow](docs-source/_static/architecture-v4.svg)
 
 XLSX rows are normalized in memory and delegated to the CSV reader. Both input
 formats therefore share the same event model and validation rules before the
@@ -68,10 +69,11 @@ ICS generator produces one importable calendar file.
 ```bash
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python3 -m unittest discover -s tests -v
 python -m pip install -e '.[docs]'
-python -m sphinx -b html docs docs/_build/html
+python -m sphinx -b html docs-source docs
 ```
 
-Open `docs/_build/html/index.html` after building the documentation.
+Open `docs/index.html` after building the documentation. GitHub Pages can serve
+the committed output directly from the repository's `/docs` directory.
 
 ## AI usage
 

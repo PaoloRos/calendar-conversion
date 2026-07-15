@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Application architecture &#8212; Calendar Conversion Application documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=a40e8749" />
+    <script src="_static/documentation_options.js?v=01f34227"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Testing the application" href="testing.html" />
+    <link rel="prev" title="Input formats" href="input-format.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="application-architecture">
+<h1>Application architecture<a class="headerlink" href="#application-architecture" title="Link to this heading">¶</a></h1>
+<p>The application separates file decoding, event representation, validation,
+generation, and command-line coordination separate. Both input formats reach
+the same CSV parsing contract, so their behavior remains consistent.</p>
+<img alt="Conversion architecture diagram" class="align-center" src="_images/architecture-v4.svg" />
+<p>The main responsibilities are:</p>
+<ul class="simple">
+<li><p>The XLSX reader converts worksheet cells to normalized CSV text in memory.</p></li>
+<li><p>The CSV reader parses rows into immutable <a class="reference internal" href="api.html#calendar_conversion.event.Event" title="calendar_conversion.event.Event"><code class="xref py py-class docutils literal notranslate"><span class="pre">Event</span></code></a> objects.</p></li>
+<li><p>The validator applies shared semantic rules and reports every issue.</p></li>
+<li><p>The ICS generator creates one <code class="docutils literal notranslate"><span class="pre">VCALENDAR</span></code> with one <code class="docutils literal notranslate"><span class="pre">VEVENT</span></code> per event.</p></li>
+<li><p>The application selects the reader, skips invalid events, writes the output,
+and prints the report.</p></li>
+</ul>
+<p>The model uses an inclusive end date for all-day events because that is natural
+for human input. The generator adds one day when producing iCalendar’s
+exclusive <code class="docutils literal notranslate"><span class="pre">DTEND</span></code>. Timed events use <code class="docutils literal notranslate"><span class="pre">Europe/Rome</span></code> timezone rules and are
+converted to UTC, including daylight-saving changes.</p>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Calendar Conversion Application</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="getting-started.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input-format.html">Input formats</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Application architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testing.html">Testing the application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ai-usage.html">AI tool usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">Python API reference</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="input-format.html" title="previous chapter">Input formats</a></li>
+      <li>Next: <a href="testing.html" title="next chapter">Testing the application</a></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="_sources/architecture.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

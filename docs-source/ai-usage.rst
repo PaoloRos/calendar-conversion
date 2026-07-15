@@ -1,7 +1,7 @@
-Use of AI tools
-===============
+AI tool usage
+=============
 
-This project was developed with **OpenAI Codex GPT 5.6 Sol** as an AI-assisted
+This project was built with **OpenAI Codex GPT 5.6 Sol** as an AI-assisted
 programming tool. The project owner remained responsible for the requirements,
 decisions, and acceptance of the result.
 

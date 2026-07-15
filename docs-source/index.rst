@@ -1,7 +1,7 @@
 Calendar Conversion Application
 ===============================
 
-``calendar-conversion`` turns a human-authored CSV or XLSX schedule into one
+``calendar-conversion`` converts human-authored CSV or XLSX schedules into one
 standards-based iCalendar (``.ics``) file. It validates events, skips invalid
 entries, and prints a clear conversion report.
 

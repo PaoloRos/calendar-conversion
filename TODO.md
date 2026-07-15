@@ -202,9 +202,9 @@ install it and build the HTML documentation with:
 
 ```bash
 python -m pip install -e '.[docs]'
-python -m sphinx -b html docs docs/_build/html
+python -m sphinx -b html docs-source docs
 ```
 
-Open `docs/_build/html/index.html` after the build. The generated files are
-excluded from Git because they can always be reproduced from the Sphinx
-source.
+Open `docs/index.html` after the build. The Sphinx source is stored in
+`docs-source/`, while the generated HTML is committed directly under `docs/`
+so GitHub Pages can publish it from the repository's `/docs` directory.

@@ -1,4 +1,4 @@
-"""Sphinx configuration for calendar-conversion."""
+"""Sphinx configuration for the GitHub Pages documentation."""
 
 from pathlib import Path
 import sys

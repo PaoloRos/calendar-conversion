@@ -56,6 +56,7 @@ Sphinx is needed only by documentation authors:
 .. code-block:: console
 
    $ python -m pip install -e '.[docs]'
-   $ python -m sphinx -b html docs docs/_build/html
+   $ python -m sphinx -b html docs-source docs
 
-Then open ``docs/_build/html/index.html`` in a browser.
+Then open ``docs/index.html`` in a browser. The same committed HTML is served
+by GitHub Pages when the repository's Pages source is set to ``/docs``.

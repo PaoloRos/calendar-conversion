@@ -1,7 +1,7 @@
-Input format
-============
+Input formats
+=============
 
-CSV files and XLSX worksheets share this header:
+CSV files and XLSX worksheets use the same header:
 
 .. code-block:: text
 

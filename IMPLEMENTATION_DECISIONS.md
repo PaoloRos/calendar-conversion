@@ -262,7 +262,7 @@ and status 2 means a fatal input or output error prevented conversion.
 ## Documentation
 
 Project documentation uses Sphinx with reStructuredText source files in
-`docs/`. The built-in Sphinx theme and extensions are sufficient: `autodoc`
+`docs-source/`. The built-in Sphinx theme and extensions are sufficient: `autodoc`
 extracts the public Python API from docstrings, while `napoleon` allows future
 docstrings to use readable Google- or NumPy-style sections. The architecture
 is illustrated by a repository-owned SVG, avoiding a browser-side diagram
@@ -271,6 +271,8 @@ runtime or another Sphinx extension.
 Sphinx is declared as the optional `docs` dependency rather than a runtime
 dependency because users do not need it to convert calendars. The compatible
 range is Sphinx 8.x: the project supports Python 3.11, while Sphinx 9 requires
-Python 3.12 or newer. Generated HTML is written below `docs/_build/` and is
-ignored by Git; the reStructuredText, configuration, style sheet, and SVG are
-the reproducible documentation source.
+Python 3.12 or newer. Generated HTML is written directly under `docs/` and
+committed so GitHub Pages can publish that directory. A `.nojekyll` marker
+ensures Sphinx's underscore-prefixed asset directories are served unchanged;
+the reStructuredText, configuration, style sheet, and SVG in `docs-source/`
+remain the reproducible documentation source.

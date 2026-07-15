@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Calendar Conversion Application &#8212; Calendar Conversion Application documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=a40e8749" />
+    <script src="_static/documentation_options.js?v=01f34227"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Getting started" href="getting-started.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="calendar-conversion-application">
+<h1>Calendar Conversion Application<a class="headerlink" href="#calendar-conversion-application" title="Link to this heading">¶</a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">calendar-conversion</span></code> converts human-authored CSV or XLSX schedules into one
+standards-based iCalendar (<code class="docutils literal notranslate"><span class="pre">.ics</span></code>) file. It validates events, skips invalid
+entries, and prints a clear conversion report.</p>
+<img alt="CSV and XLSX schedules pass through readers, the event model and validator before producing an ICS calendar and report." class="align-center" src="_images/architecture-v4.svg" />
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="getting-started.html">Getting started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#run-a-conversion">Run a conversion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#save-the-report">Save the report</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#build-this-documentation">Build this documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="input-format.html">Input formats</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="input-format.html#timed-event">Timed event</a></li>
+<li class="toctree-l2"><a class="reference internal" href="input-format.html#all-day-event">All-day event</a></li>
+<li class="toctree-l2"><a class="reference internal" href="input-format.html#xlsx-notes">XLSX notes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">Application architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testing.html">Testing the application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ai-usage.html">AI tool usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">Python API reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api.html#module-calendar_conversion.event">Event model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#module-calendar_conversion.csv_reader">Readers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#module-calendar_conversion.validator">Validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#module-calendar_conversion.ics_generator">ICS generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#module-calendar_conversion.application">Application</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<section id="quick-example">
+<h2>Quick example<a class="headerlink" href="#quick-example" title="Link to this heading">¶</a></h2>
+<p>From the project root, with the virtual environment active:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>python<span class="w"> </span>main.py
+<span class="go">=== CONVERSION REPORT ===</span>
+<span class="go">Input: events.xlsx</span>
+<span class="go">Output: schedule.ics</span>
+<span class="go">Valid and converted events: 3</span>
+<span class="go">Invalid and not converted events: 0</span>
+</pre></div>
+</div>
+<p>The resulting <code class="docutils literal notranslate"><span class="pre">schedule.ics</span></code> can be imported directly by common calendar
+applications.</p>
+</section>
+<section id="author">
+<h2>Author<a class="headerlink" href="#author" title="Link to this heading">¶</a></h2>
+<p>Developed by <a class="reference external" href="https://github.com/PaoloRos">Paolo Rossi</a>.</p>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="#">Calendar Conversion Application</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="getting-started.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input-format.html">Input formats</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">Application architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testing.html">Testing the application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ai-usage.html">AI tool usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">Python API reference</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+      <li>Next: <a href="getting-started.html" title="next chapter">Getting started</a></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="_sources/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
