@@ -1,10 +1,3 @@
 id,summary,all_date,start_date,start_time,end_date,end_time,location,description
-shift-rome,Morning station shift,false,2026-08-03,08:00,2026-08-03,14:00,Roma Termini,Valid timed event
-holiday-001,Company holiday,true,2026-08-15,,2026-08-15,,,Valid one-day all-day event
-night-001,Night maintenance,false,2026-08-20,22:00,2026-08-21,06:00,Operations center,Valid overnight event
-conference-001,Annual conference,true,2026-09-10,,2026-09-12,,Convention center,Valid multi-day all-day event
-,Missing identifier,false,2026-08-05,09:00,2026-08-05,10:00,Office,Invalid: empty ID
-missing-summary,,true,2026-08-06,,2026-08-06,,,Invalid: empty summary
-reversed-date,Reversed date range,false,2026-08-10,09:00,2026-08-09,17:00,Office,Invalid: end date before start date
-reversed-time,Reversed time range,false,2026-08-11,18:00,2026-08-11,08:00,Office,Invalid: end time before start time
-shift-rome,Duplicate identifier,false,2026-08-12,10:00,2026-08-12,11:00,Office,Invalid: duplicate ID
+meeting-1,Planning,false,2026-07-20,09:30,2026-07-20,10:30,Office,Weekly planning
+holiday-1,Holiday,true,2026-08-15,,2026-08-15,,,
