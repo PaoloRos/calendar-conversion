@@ -12,7 +12,7 @@ development workflow.
 
 The idea came from a practical need in my firefighter brigade: importing the
 organization's human-written schedule into personal calendar applications. A
-future upgrade may provide a UI where colleagues can download a calendar based
+future upgrade may provide a [UI](https://github.com/PaoloRos/firefighter-app-ui) where colleagues can download a calendar based
 on their role in the brigade.
 
 ## Requirements and setup
