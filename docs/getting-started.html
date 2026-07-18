@@ -62,6 +62,14 @@ third-party runtime package and provides XLSX support.</p>
 </div>
 <p>Use <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">main.py</span> <span class="pre">--help</span></code> for the command summary.</p>
 </section>
+<section id="call-from-python">
+<h2>Call from Python<a class="headerlink" href="#call-from-python" title="Link to this heading">¶</a></h2>
+<p>Use <code class="docutils literal notranslate"><span class="pre">calendar_conversion.convert_schedule</span></code> to integrate the conversion
+pipeline into a Python application. Pass an open binary stream plus its
+original filename and the calendar name. The returned result contains ICS
+text, counts, and structured invalid-event details. See <a class="reference internal" href="api.html"><span class="doc">Python API reference</span></a> for the
+complete contract and error types.</p>
+</section>
 <section id="save-the-report">
 <h2>Save the report<a class="headerlink" href="#save-the-report" title="Link to this heading">¶</a></h2>
 <p>The report is written to standard output. Redirecting it produces clean text
@@ -115,6 +123,7 @@ by GitHub Pages when the repository’s Pages source is set to <code class="docu
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Getting started</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#run-a-conversion">Run a conversion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#call-from-python">Call from Python</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#save-the-report">Save the report</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#build-this-documentation">Build this documentation</a></li>
 </ul>

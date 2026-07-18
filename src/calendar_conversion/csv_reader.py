@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import csv
-from collections.abc import Iterator
 from datetime import date, datetime, time
 from os import PathLike
 from pathlib import Path
@@ -45,14 +44,21 @@ def read_events_csv(source: str | PathLike[str] | TextIO) -> list[Event]:
     by true/false, yes/no, y/n, or 1/0.
     """
     if hasattr(source, "read"):
-        return list(_read_events(source))  # type: ignore[arg-type]
+        events, _ = _read_events_csv_with_source_rows(
+            source  # type: ignore[arg-type]
+        )
+        return events
 
     path = Path(source)
     with path.open("r", encoding="utf-8-sig", newline="") as csv_file:
-        return list(_read_events(csv_file))
+        events, _ = _read_events_csv_with_source_rows(csv_file)
+        return events
 
 
-def _read_events(csv_file: TextIO) -> Iterator[Event]:
+def _read_events_csv_with_source_rows(
+    csv_file: TextIO,
+) -> tuple[list[Event], list[int]]:
+    """Read events and retain their physical CSV row numbers."""
     reader = csv.DictReader(csv_file)
     if reader.fieldnames is None:
         raise CSVReadError("CSV file must contain a header row")
@@ -76,14 +82,19 @@ def _read_events(csv_file: TextIO) -> Iterator[Event]:
             "missing required column(s): " + ", ".join(missing_columns)
         )
 
-    for row_number, row in enumerate(reader, start=2):
+    events: list[Event] = []
+    source_rows: list[int] = []
+    for row in reader:
+        row_number = reader.line_num
         if None in row:
             raise CSVReadError(
                 "contains more values than the header defines",
                 row_number=row_number,
             )
 
-        yield _event_from_row(row, row_number)
+        events.append(_event_from_row(row, row_number))
+        source_rows.append(row_number)
+    return events, source_rows
 
 
 def _event_from_row(row: dict[str, str | None], row_number: int) -> Event:

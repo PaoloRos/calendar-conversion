@@ -35,6 +35,137 @@
             
   <section id="python-api-reference">
 <h1>Python API reference<a class="headerlink" href="#python-api-reference" title="Link to this heading">¶</a></h1>
+<section id="structured-conversion-service">
+<h2>Structured conversion service<a class="headerlink" href="#structured-conversion-service" title="Link to this heading">¶</a></h2>
+<p>Use this API when integrating the converter into another Python application.
+It accepts an open binary stream and returns calendar text and structured
+validation details without creating temporary files.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">calendar_conversion</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConversionError</span><span class="p">,</span> <span class="n">convert_schedule</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;events.xlsx&quot;</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">source</span><span class="p">:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">convert_schedule</span><span class="p">(</span>
+            <span class="n">source</span><span class="p">,</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s2">&quot;events.xlsx&quot;</span><span class="p">,</span>
+            <span class="n">calendar_name</span><span class="o">=</span><span class="s2">&quot;Fire brigade schedule&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">except</span> <span class="n">ConversionError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">code</span><span class="p">,</span> <span class="n">error</span><span class="o">.</span><span class="n">row</span><span class="p">,</span> <span class="n">error</span><span class="o">.</span><span class="n">worksheet</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">converted_count</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">skipped_count</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">ConversionResult</span></code> and its nested objects are immutable. Stable enum values
+in <code class="docutils literal notranslate"><span class="pre">IssueCode</span></code> and <code class="docutils literal notranslate"><span class="pre">ConversionErrorCode</span></code> are intended for application
+logic and translation; diagnostic messages are intended for developers.</p>
+<p id="module-calendar_conversion.service">Public service for converting uploaded schedule streams into calendars.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="calendar_conversion.service.IssueCode">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">calendar_conversion.service.</span></span><span class="sig-name descname"><span class="pre">IssueCode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#calendar_conversion.service.IssueCode" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">StrEnum</span></code></p>
+<p>Stable code for one semantic event validation problem.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="calendar_conversion.service.ConversionErrorCode">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">calendar_conversion.service.</span></span><span class="sig-name descname"><span class="pre">ConversionErrorCode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#calendar_conversion.service.ConversionErrorCode" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">StrEnum</span></code></p>
+<p>Stable codes for fatal input errors raised by <code class="docutils literal notranslate"><span class="pre">convert_schedule</span></code>.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="calendar_conversion.service.SourcePosition">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">calendar_conversion.service.</span></span><span class="sig-name descname"><span class="pre">SourcePosition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">worksheet</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#calendar_conversion.service.SourcePosition" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Location of an event in the input schedule.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>event_index</strong> (<em>int</em>)</p></li>
+<li><p><strong>row</strong> (<em>int</em>)</p></li>
+<li><p><strong>worksheet</strong> (<em>str</em><em> | </em><em>None</em>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="calendar_conversion.service.InvalidEvent">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">calendar_conversion.service.</span></span><span class="sig-name descname"><span class="pre">InvalidEvent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_position</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">summary</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">issue_codes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#calendar_conversion.service.InvalidEvent" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>An input event skipped because semantic validation failed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source_position</strong> (<a class="reference internal" href="#calendar_conversion.service.SourcePosition" title="calendar_conversion.service.SourcePosition"><em>SourcePosition</em></a>)</p></li>
+<li><p><strong>id</strong> (<em>str</em>)</p></li>
+<li><p><strong>summary</strong> (<em>str</em>)</p></li>
+<li><p><strong>issue_codes</strong> (<em>tuple</em><em>[</em><a class="reference internal" href="#calendar_conversion.service.IssueCode" title="calendar_conversion.validator.IssueCode"><em>IssueCode</em></a><em>, </em><em>...</em><em>]</em>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="calendar_conversion.service.ConversionResult">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">calendar_conversion.service.</span></span><span class="sig-name descname"><span class="pre">ConversionResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ics_text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total_count</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">converted_count</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skipped_count</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">invalid_events</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#calendar_conversion.service.ConversionResult" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Structured outcome of a schedule conversion.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ics_text</strong> (<em>str</em>)</p></li>
+<li><p><strong>total_count</strong> (<em>int</em>)</p></li>
+<li><p><strong>converted_count</strong> (<em>int</em>)</p></li>
+<li><p><strong>skipped_count</strong> (<em>int</em>)</p></li>
+<li><p><strong>invalid_events</strong> (<em>tuple</em><em>[</em><a class="reference internal" href="#calendar_conversion.service.InvalidEvent" title="calendar_conversion.service.InvalidEvent"><em>InvalidEvent</em></a><em>, </em><em>...</em><em>]</em>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="calendar_conversion.service.ConversionError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">calendar_conversion.service.</span></span><span class="sig-name descname"><span class="pre">ConversionError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">row</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">worksheet</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#calendar_conversion.service.ConversionError" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></p>
+<p>Fatal schedule error with a stable code and optional source location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>code</strong> (<a class="reference internal" href="#calendar_conversion.service.ConversionErrorCode" title="calendar_conversion.service.ConversionErrorCode"><em>ConversionErrorCode</em></a>)</p></li>
+<li><p><strong>message</strong> (<em>str</em>)</p></li>
+<li><p><strong>row</strong> (<em>int</em><em> | </em><em>None</em>)</p></li>
+<li><p><strong>worksheet</strong> (<em>str</em><em> | </em><em>None</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="calendar_conversion.service.convert_schedule">
+<span class="sig-prename descclassname"><span class="pre">calendar_conversion.service.</span></span><span class="sig-name descname"><span class="pre">convert_schedule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calendar_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#calendar_conversion.service.convert_schedule" title="Link to this definition">¶</a></dt>
+<dd><p>Convert a CSV or XLSX binary stream into a structured result.</p>
+<p>Structurally malformed input raises <a class="reference internal" href="#calendar_conversion.service.ConversionError" title="calendar_conversion.service.ConversionError"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConversionError</span></code></a>. Semantic
+event problems are returned in <code class="docutils literal notranslate"><span class="pre">invalid_events</span></code> while valid events are
+included in <code class="docutils literal notranslate"><span class="pre">ics_text</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source</strong> (<em>BinaryIO</em>)</p></li>
+<li><p><strong>filename</strong> (<em>str</em>)</p></li>
+<li><p><strong>calendar_name</strong> (<em>str</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#calendar_conversion.service.ConversionResult" title="calendar_conversion.service.ConversionResult"><em>ConversionResult</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
 <section id="module-calendar_conversion.event">
 <span id="event-model"></span><h2>Event model<a class="headerlink" href="#module-calendar_conversion.event" title="Link to this heading">¶</a></h2>
 <p>Internal event representation shared by all conversion components.</p>
@@ -145,7 +276,7 @@ worksheet explicitly. Completely empty data rows are ignored.</p>
 <p>Semantic validation for normalized calendar events.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="calendar_conversion.validator.ValidationIssue">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">calendar_conversion.validator.</span></span><span class="sig-name descname"><span class="pre">ValidationIssue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#calendar_conversion.validator.ValidationIssue" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">calendar_conversion.validator.</span></span><span class="sig-name descname"><span class="pre">ValidationIssue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">code</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#calendar_conversion.validator.ValidationIssue" title="Link to this definition">¶</a></dt>
 <dd><p>One validation problem found in an event.</p>
 <p><code class="docutils literal notranslate"><span class="pre">event_index</span></code> is the one-based position supplied by <code class="docutils literal notranslate"><span class="pre">validate_events</span></code>.
 It is <code class="docutils literal notranslate"><span class="pre">None</span></code> when <code class="docutils literal notranslate"><span class="pre">validate_event</span></code> is called directly.</p>
@@ -155,6 +286,7 @@ It is <code class="docutils literal notranslate"><span class="pre">None</span></
 <li><p><strong>field</strong> (<em>str</em>)</p></li>
 <li><p><strong>message</strong> (<em>str</em>)</p></li>
 <li><p><strong>event_id</strong> (<em>str</em>)</p></li>
+<li><p><strong>code</strong> (<a class="reference internal" href="#calendar_conversion.service.IssueCode" title="calendar_conversion.validator.IssueCode"><em>IssueCode</em></a>)</p></li>
 <li><p><strong>event_index</strong> (<em>int</em><em> | </em><em>None</em>)</p></li>
 </ul>
 </dd>
@@ -268,12 +400,6 @@ It is <code class="docutils literal notranslate"><span class="pre">None</span></
 <section id="module-calendar_conversion.application">
 <span id="application"></span><h2>Application<a class="headerlink" href="#module-calendar_conversion.application" title="Link to this heading">¶</a></h2>
 <p>Command-line application coordinating schedule conversion.</p>
-<dl class="py exception">
-<dt class="sig sig-object py" id="calendar_conversion.application.ApplicationError">
-<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">calendar_conversion.application.</span></span><span class="sig-name descname"><span class="pre">ApplicationError</span></span><a class="headerlink" href="#calendar_conversion.application.ApplicationError" title="Link to this definition">¶</a></dt>
-<dd><p>A fatal error that prevents schedule conversion.</p>
-</dd></dl>
-
 <dl class="py function">
 <dt class="sig sig-object py" id="calendar_conversion.application.run">
 <span class="sig-prename descclassname"><span class="pre">calendar_conversion.application.</span></span><span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">argv</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">stdout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stderr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#calendar_conversion.application.run" title="Link to this definition">¶</a></dt>
@@ -340,6 +466,7 @@ It is <code class="docutils literal notranslate"><span class="pre">None</span></
 <li class="toctree-l1"><a class="reference internal" href="testing.html">Testing the application</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ai-usage.html">AI tool usage</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Python API reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#structured-conversion-service">Structured conversion service</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-calendar_conversion.event">Event model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-calendar_conversion.csv_reader">Readers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-calendar_conversion.validator">Validation</a></li>

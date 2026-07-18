@@ -56,6 +56,35 @@ time fields empty. See the included `events.csv` and `events.xlsx` examples.
 Exit status `0` means complete success, `1` means invalid events were skipped,
 and `2` means a fatal read or write error.
 
+## Use the structured conversion service
+
+Web backends and other Python callers can convert an open binary stream
+without creating temporary input or output files:
+
+```python
+from calendar_conversion import ConversionError, convert_schedule
+
+with open("events.xlsx", "rb") as source:
+    try:
+        result = convert_schedule(
+            source,
+            filename="events.xlsx",
+            calendar_name="Fire brigade schedule",
+        )
+    except ConversionError as error:
+        print(error.code, error.row, error.worksheet)
+    else:
+        print(result.converted_count, result.skipped_count)
+        print(result.ics_text)
+```
+
+`ConversionResult` includes ICS text, total/converted/skipped counts, and one
+structured entry per invalid event. Invalid entries contain the event index,
+source row, optional worksheet, ID, summary, and stable issue codes. Fatal
+input errors raise `ConversionError` with a stable code and optional source
+row and worksheet. The command-line interface uses this same service while
+retaining its existing reports and exit statuses.
+
 ## Architecture
 
 ![Conversion workflow](docs-source/_static/architecture-v4.svg)

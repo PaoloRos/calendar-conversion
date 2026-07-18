@@ -39,6 +39,10 @@ The CSV format can be used directly as an input format or exported as an interme
    - Selects the appropriate reader from the input file type.
    - Coordinates reading, validation, partial conversion, and reporting.
 
+7. **Structured conversion service**
+   - Exposes the complete in-memory conversion pipeline to Python callers.
+   - Returns typed results and raises typed fatal input errors.
+
 ## Implementation sequence
 
 1. Build the internal event model.
@@ -205,6 +209,29 @@ an `ICSGenerationError` containing the validation issues if any event is
 invalid.
 
 ## Application interface
+
+The public `calendar_conversion.service` module is the application boundary
+for programmatic callers. `convert_schedule` accepts an open binary stream,
+the original filename used for format selection, and a calendar name. It does
+not persist input or output data. Its immutable `ConversionResult` contains
+the UTF-8 ICS text, total/converted/skipped counts, and one `InvalidEvent` for
+each skipped event.
+
+Each invalid event contains its one-based event index, original source row,
+worksheet name for XLSX inputs, ID, summary, and stable `IssueCode` values.
+Fatal format or read failures raise `ConversionError`; callers should branch
+on its stable `ConversionErrorCode` rather than parsing its diagnostic message.
+CSV errors may include a row, and XLSX errors may include both a row and
+worksheet. This separation lets the future web API translate codes into safe
+localized messages without exposing parser details.
+
+The CLI opens the selected file as a binary stream, calls the same structured
+service, writes the returned ICS text, and renders its established terminal
+report. This keeps CLI exit codes and output behavior compatible while
+preventing the command-line and web paths from developing separate conversion
+logic.
+
+## Command-line interface
 
 The root-level `main.py` is a thin executable wrapper around the reusable
 `calendar_conversion.application` module. With no arguments it reads

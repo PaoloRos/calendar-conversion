@@ -35,6 +35,15 @@ Select another CSV or XLSX file, or change the output path:
 
 Use ``python main.py --help`` for the command summary.
 
+Call from Python
+----------------
+
+Use ``calendar_conversion.convert_schedule`` to integrate the conversion
+pipeline into a Python application. Pass an open binary stream plus its
+original filename and the calendar name. The returned result contains ICS
+text, counts, and structured invalid-event details. See :doc:`api` for the
+complete contract and error types.
+
 Save the report
 ---------------
 

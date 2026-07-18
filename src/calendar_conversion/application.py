@@ -8,11 +8,12 @@ from pathlib import Path
 import sys
 from typing import TextIO
 
-from .csv_reader import CSVReadError, read_events_csv
-from .event import Event
-from .ics_generator import write_ics
-from .validator import validate_events
-from .xlsx_reader import XLSXReadError, read_events_xlsx
+from .service import (
+    ConversionError,
+    ConversionErrorCode,
+    InvalidEvent,
+    convert_schedule,
+)
 
 
 DEFAULT_INPUT_PATH = Path("events.xlsx")
@@ -20,10 +21,6 @@ DEFAULT_OUTPUT_PATH = Path("schedule.ics")
 BOLD_CYAN = "\033[1;36m"
 BOLD_RED = "\033[1;31m"
 RESET = "\033[0m"
-
-
-class ApplicationError(ValueError):
-    """A fatal error that prevents schedule conversion."""
 
 
 def run(
@@ -38,40 +35,34 @@ def run(
     arguments = _argument_parser().parse_args(argv)
 
     try:
-        events = _read_events(arguments.input)
-        issues = validate_events(events)
-        invalid_positions = {
-            issue.event_index
-            for issue in issues
-            if issue.event_index is not None
-        }
-        valid_events = [
-            event
-            for event_index, event in enumerate(events, start=1)
-            if event_index not in invalid_positions
-        ]
-        write_ics(
-            valid_events,
-            arguments.output,
-            calendar_name="Converted schedule",
+        if arguments.input.suffix.casefold() not in {".csv", ".xlsx"}:
+            raise ConversionError(
+                code=ConversionErrorCode.UNSUPPORTED_FILE_TYPE,
+                message="input file must use the .csv or .xlsx extension",
+            )
+        with arguments.input.open("rb") as input_file:
+            result = convert_schedule(
+                input_file,
+                filename=arguments.input.name,
+                calendar_name="Converted schedule",
+            )
+        arguments.output.write_text(
+            result.ics_text,
+            encoding="utf-8",
+            newline="",
         )
-    except (ApplicationError, CSVReadError, XLSXReadError, OSError) as error:
+    except (ConversionError, OSError) as error:
         _print_fatal_error(error, error_output)
         return 2
 
-    invalid_events = [
-        event
-        for event_index, event in enumerate(events, start=1)
-        if event_index in invalid_positions
-    ]
     _print_report(
         input_path=arguments.input,
         output_path=arguments.output,
-        valid_count=len(valid_events),
-        invalid_events=invalid_events,
+        valid_count=result.converted_count,
+        invalid_events=list(result.invalid_events),
         output=output,
     )
-    return 1 if invalid_events else 0
+    return 1 if result.invalid_events else 0
 
 
 def main() -> int:
@@ -100,21 +91,12 @@ def _argument_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def _read_events(input_path: Path) -> list[Event]:
-    suffix = input_path.suffix.casefold()
-    if suffix == ".csv":
-        return read_events_csv(input_path)
-    if suffix == ".xlsx":
-        return read_events_xlsx(input_path)
-    raise ApplicationError("input file must use the .csv or .xlsx extension")
-
-
 def _print_report(
     *,
     input_path: Path,
     output_path: Path,
     valid_count: int,
-    invalid_events: list[Event],
+    invalid_events: list[InvalidEvent],
     output: TextIO,
 ) -> None:
     use_color = _supports_color(output)

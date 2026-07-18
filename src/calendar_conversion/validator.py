@@ -2,10 +2,21 @@
 
 from collections.abc import Iterable
 from dataclasses import dataclass
+from enum import StrEnum
 import sys
 from typing import TextIO
 
 from .event import Event
+
+
+class IssueCode(StrEnum):
+    """Stable code for one semantic event validation problem."""
+
+    EMPTY_ID = "empty_id"
+    EMPTY_SUMMARY = "empty_summary"
+    END_DATE_BEFORE_START_DATE = "end_date_before_start_date"
+    END_TIME_BEFORE_START_TIME = "end_time_before_start_time"
+    DUPLICATE_ID = "duplicate_id"
 
 
 @dataclass(frozen=True, slots=True)
@@ -19,6 +30,7 @@ class ValidationIssue:
     field: str
     message: str
     event_id: str
+    code: IssueCode
     event_index: int | None = None
 
 
@@ -34,6 +46,7 @@ def validate_event(
                 field="id",
                 message="id must not be empty",
                 event_id=event.id,
+                code=IssueCode.EMPTY_ID,
                 event_index=event_index,
             )
         )
@@ -44,6 +57,7 @@ def validate_event(
                 field="summary",
                 message="summary must not be empty",
                 event_id=event.id,
+                code=IssueCode.EMPTY_SUMMARY,
                 event_index=event_index,
             )
         )
@@ -58,6 +72,7 @@ def validate_event(
                 field="end_date",
                 message="end_date must not be before start_date",
                 event_id=event.id,
+                code=IssueCode.END_DATE_BEFORE_START_DATE,
                 event_index=event_index,
             )
         )
@@ -71,6 +86,7 @@ def validate_event(
                     field="end_time",
                     message="end_time must not be before start_time",
                     event_id=event.id,
+                    code=IssueCode.END_TIME_BEFORE_START_TIME,
                     event_index=event_index,
                 )
             )
@@ -94,6 +110,7 @@ def validate_events(events: Iterable[Event]) -> list[ValidationIssue]:
                             f"{first_index_by_id[event.id]}"
                         ),
                         event_id=event.id,
+                        code=IssueCode.DUPLICATE_ID,
                         event_index=event_index,
                     )
                 )

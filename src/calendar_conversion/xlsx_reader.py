@@ -12,7 +12,7 @@ from zipfile import BadZipFile
 from openpyxl import load_workbook
 from openpyxl.utils.exceptions import InvalidFileException
 
-from .csv_reader import CSVReadError, read_events_csv
+from .csv_reader import CSVReadError, _read_events_csv_with_source_rows
 from .event import Event
 
 
@@ -48,6 +48,18 @@ def read_events_xlsx(
     The active worksheet is read by default. Pass ``sheet_name`` to select a
     worksheet explicitly. Completely empty data rows are ignored.
     """
+    events, _, _ = _read_events_xlsx_with_source_rows(
+        source, sheet_name=sheet_name
+    )
+    return events
+
+
+def _read_events_xlsx_with_source_rows(
+    source: str | PathLike[str] | BinaryIO,
+    *,
+    sheet_name: str | None = None,
+) -> tuple[list[Event], list[int], str]:
+    """Read events and retain their original worksheet row numbers."""
     try:
         workbook = load_workbook(source, read_only=True, data_only=True)
     except (BadZipFile, InvalidFileException, OSError, ValueError) as error:
@@ -67,7 +79,9 @@ def read_events_xlsx(
 
         csv_source, source_rows = _worksheet_as_csv(worksheet)
         try:
-            return read_events_csv(csv_source)
+            events, normalized_rows = _read_events_csv_with_source_rows(
+                csv_source
+            )
         except CSVReadError as error:
             row_number = None
             if error.row_number is not None:
@@ -77,6 +91,8 @@ def read_events_xlsx(
                 sheet_name=worksheet.title,
                 row_number=row_number,
             ) from error
+        event_source_rows = [source_rows[row - 1] for row in normalized_rows]
+        return events, event_source_rows, worksheet.title
     finally:
         workbook.close()
 
